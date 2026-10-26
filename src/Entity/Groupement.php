@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GroupementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GroupementRepository::class)]
@@ -21,6 +23,21 @@ class Groupement
 
     #[ORM\Column(length: 17)]
     private ?string $telephone = null;
+
+    #[ORM\OneToOne(inversedBy: 'groupement', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Caisse $caisse = null;
+
+    /**
+     * @var Collection<int, Membre>
+     */
+    #[ORM\OneToMany(targetEntity: Membre::class, mappedBy: 'groupement')]
+    private Collection $membres;
+
+    public function __construct()
+    {
+        $this->membres = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +76,48 @@ class Groupement
     public function setTelephone(string $telephone): static
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getCaisse(): ?Caisse
+    {
+        return $this->caisse;
+    }
+
+    public function setCaisse(Caisse $caisse): static
+    {
+        $this->caisse = $caisse;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Membre>
+     */
+    public function getMembres(): Collection
+    {
+        return $this->membres;
+    }
+
+    public function addMembre(Membre $membre): static
+    {
+        if (!$this->membres->contains($membre)) {
+            $this->membres->add($membre);
+            $membre->setGroupement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMembre(Membre $membre): static
+    {
+        if ($this->membres->removeElement($membre)) {
+            // set the owning side to null (unless already changed)
+            if ($membre->getGroupement() === $this) {
+                $membre->setGroupement(null);
+            }
+        }
 
         return $this;
     }

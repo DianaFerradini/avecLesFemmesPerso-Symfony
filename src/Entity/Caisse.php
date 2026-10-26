@@ -16,6 +16,9 @@ class Caisse
     #[ORM\Column]
     private ?int $solde = null;
 
+    #[ORM\OneToOne(mappedBy: 'caisse', cascade: ['persist', 'remove'])]
+    private ?Groupement $groupement = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,23 @@ class Caisse
     public function setSolde(int $solde): static
     {
         $this->solde = $solde;
+
+        return $this;
+    }
+
+    public function getGroupement(): ?Groupement
+    {
+        return $this->groupement;
+    }
+
+    public function setGroupement(Groupement $groupement): static
+    {
+        // set the owning side of the relation if necessary
+        if ($groupement->getCaisse() !== $this) {
+            $groupement->setCaisse($this);
+        }
+
+        $this->groupement = $groupement;
 
         return $this;
     }
