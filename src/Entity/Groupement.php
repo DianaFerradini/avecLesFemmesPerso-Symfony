@@ -40,9 +40,16 @@ class Groupement
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updateAt = null;
 
+    /**
+     * @var Collection<int, Campagne>
+     */
+    #[ORM\OneToMany(targetEntity: Campagne::class, mappedBy: 'groupement')]
+    private Collection $campagnes;
+
     public function __construct()
     {
         $this->membres = new ArrayCollection();
+        $this->campagnes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,6 +155,36 @@ class Groupement
     public function setUpdateAt(?\DateTime $updateAt): static
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Campagne>
+     */
+    public function getCampagnes(): Collection
+    {
+        return $this->campagnes;
+    }
+
+    public function addCampagne(Campagne $campagne): static
+    {
+        if (!$this->campagnes->contains($campagne)) {
+            $this->campagnes->add($campagne);
+            $campagne->setGroupement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampagne(Campagne $campagne): static
+    {
+        if ($this->campagnes->removeElement($campagne)) {
+            // set the owning side to null (unless already changed)
+            if ($campagne->getGroupement() === $this) {
+                $campagne->setGroupement(null);
+            }
+        }
 
         return $this;
     }
