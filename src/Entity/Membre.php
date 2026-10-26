@@ -68,9 +68,16 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Tontine::class, mappedBy: 'membres')]
     private Collection $tontines;
 
+    /**
+     * @var Collection<int, ModeCotisation>
+     */
+    #[ORM\OneToMany(targetEntity: ModeCotisation::class, mappedBy: 'membre')]
+    private Collection $modeCotisations;
+
     public function __construct()
     {
         $this->tontines = new ArrayCollection();
+        $this->modeCotisations = new ArrayCollection();
     }
 
 
@@ -266,6 +273,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tontines->removeElement($tontine)) {
             $tontine->removeMembre($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ModeCotisation>
+     */
+    public function getModeCotisations(): Collection
+    {
+        return $this->modeCotisations;
+    }
+
+    public function addModeCotisation(ModeCotisation $modeCotisation): static
+    {
+        if (!$this->modeCotisations->contains($modeCotisation)) {
+            $this->modeCotisations->add($modeCotisation);
+            $modeCotisation->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModeCotisation(ModeCotisation $modeCotisation): static
+    {
+        if ($this->modeCotisations->removeElement($modeCotisation)) {
+            // set the owning side to null (unless already changed)
+            if ($modeCotisation->getMembre() === $this) {
+                $modeCotisation->setMembre(null);
+            }
         }
 
         return $this;
