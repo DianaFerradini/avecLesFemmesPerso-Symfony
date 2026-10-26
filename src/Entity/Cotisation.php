@@ -30,6 +30,10 @@ class Cotisation
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updateAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'cotisations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Membre $membre = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +95,18 @@ class Cotisation
     public function setUpdateAt(?\DateTime $updateAt): static
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    public function getMembre(): ?Membre
+    {
+        return $this->membre;
+    }
+
+    public function setMembre(?Membre $membre): static
+    {
+        $this->membre = $membre;
 
         return $this;
     }
