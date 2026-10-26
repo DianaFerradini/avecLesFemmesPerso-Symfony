@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\StatutPret;
 use App\Repository\PretRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,6 +38,23 @@ class Pret
     #[ORM\ManyToOne(inversedBy: 'prets')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Membre $membre = null;
+
+    /**
+     * @var Collection<int, Remboursement>
+     */
+    #[ORM\OneToMany(targetEntity: Remboursement::class, mappedBy: 'pret')]
+    private Collection $remboursements;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $updateAt = null;
+
+    public function __construct()
+    {
+        $this->remboursements = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -122,6 +141,60 @@ class Pret
     public function setMembre(?Membre $membre): static
     {
         $this->membre = $membre;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Remboursement>
+     */
+    public function getRemboursements(): Collection
+    {
+        return $this->remboursements;
+    }
+
+    public function addRemboursement(Remboursement $remboursement): static
+    {
+        if (!$this->remboursements->contains($remboursement)) {
+            $this->remboursements->add($remboursement);
+            $remboursement->setPret($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRemboursement(Remboursement $remboursement): static
+    {
+        if ($this->remboursements->removeElement($remboursement)) {
+            // set the owning side to null (unless already changed)
+            if ($remboursement->getPret() === $this) {
+                $remboursement->setPret(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeImmutable
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(\DateTimeImmutable $createAt): static
+    {
+        $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    public function getUpdateAt(): ?\DateTime
+    {
+        return $this->updateAt;
+    }
+
+    public function setUpdateAt(?\DateTime $updateAt): static
+    {
+        $this->updateAt = $updateAt;
 
         return $this;
     }
