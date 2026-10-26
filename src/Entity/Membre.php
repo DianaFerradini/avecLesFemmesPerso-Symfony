@@ -74,10 +74,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: ModeCotisation::class, mappedBy: 'membre')]
     private Collection $modeCotisations;
 
+    /**
+     * @var Collection<int, Seance>
+     */
+    #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'membreBeneficiaire')]
+    private Collection $seancesBeneficiaire;
+
     public function __construct()
     {
         $this->tontines = new ArrayCollection();
         $this->modeCotisations = new ArrayCollection();
+        $this->seancesBeneficiaire = new ArrayCollection();
     }
 
 
@@ -302,6 +309,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($modeCotisation->getMembre() === $this) {
                 $modeCotisation->setMembre(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Seance>
+     */
+    public function getSeancesBeneficiaire(): Collection
+    {
+        return $this->seancesBeneficiaire;
+    }
+
+    public function addSeancesBeneficiaire(Seance $seancesBeneficiaire): static
+    {
+        if (!$this->seancesBeneficiaire->contains($seancesBeneficiaire)) {
+            $this->seancesBeneficiaire->add($seancesBeneficiaire);
+            $seancesBeneficiaire->setMembreBeneficiaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSeancesBeneficiaire(Seance $seancesBeneficiaire): static
+    {
+        if ($this->seancesBeneficiaire->removeElement($seancesBeneficiaire)) {
+            // set the owning side to null (unless already changed)
+            if ($seancesBeneficiaire->getMembreBeneficiaire() === $this) {
+                $seancesBeneficiaire->setMembreBeneficiaire(null);
             }
         }
 
