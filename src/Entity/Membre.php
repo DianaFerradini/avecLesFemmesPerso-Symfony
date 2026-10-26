@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\RoleMembre;
 use App\Repository\MembreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
@@ -59,6 +61,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updateAt = null;
+
+    /**
+     * @var Collection<int, Tontine>
+     */
+    #[ORM\ManyToMany(targetEntity: Tontine::class, mappedBy: 'membres')]
+    private Collection $tontines;
+
+    public function __construct()
+    {
+        $this->tontines = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -227,6 +240,33 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdateAt(?\DateTime $updateAt): static
     {
         $this->updateAt = $updateAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tontine>
+     */
+    public function getTontines(): Collection
+    {
+        return $this->tontines;
+    }
+
+    public function addTontine(Tontine $tontine): static
+    {
+        if (!$this->tontines->contains($tontine)) {
+            $this->tontines->add($tontine);
+            $tontine->addMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTontine(Tontine $tontine): static
+    {
+        if ($this->tontines->removeElement($tontine)) {
+            $tontine->removeMembre($this);
+        }
 
         return $this;
     }
