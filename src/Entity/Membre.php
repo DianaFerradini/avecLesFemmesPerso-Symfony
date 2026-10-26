@@ -80,11 +80,18 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Seance::class, mappedBy: 'membreBeneficiaire')]
     private Collection $seancesBeneficiaire;
 
+    /**
+     * @var Collection<int, Pret>
+     */
+    #[ORM\OneToMany(targetEntity: Pret::class, mappedBy: 'membre')]
+    private Collection $prets;
+
     public function __construct()
     {
         $this->tontines = new ArrayCollection();
         $this->modeCotisations = new ArrayCollection();
         $this->seancesBeneficiaire = new ArrayCollection();
+        $this->prets = new ArrayCollection();
     }
 
 
@@ -339,6 +346,36 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($seancesBeneficiaire->getMembreBeneficiaire() === $this) {
                 $seancesBeneficiaire->setMembreBeneficiaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Pret>
+     */
+    public function getPrets(): Collection
+    {
+        return $this->prets;
+    }
+
+    public function addPret(Pret $pret): static
+    {
+        if (!$this->prets->contains($pret)) {
+            $this->prets->add($pret);
+            $pret->setMembre($this);
+        }
+
+        return $this;
+    }
+
+    public function removePret(Pret $pret): static
+    {
+        if ($this->prets->removeElement($pret)) {
+            // set the owning side to null (unless already changed)
+            if ($pret->getMembre() === $this) {
+                $pret->setMembre(null);
             }
         }
 
