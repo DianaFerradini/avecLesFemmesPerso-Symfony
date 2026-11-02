@@ -91,6 +91,10 @@
         "ferradinidiana:db:create": [
             "@php bin/console doctrine:database:drop --if-exists --force",
             "@php bin/console doctrine:database:create"
+        ],
+        "ferradinidiana:make:entity": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php bin/console make:entity"
         ]
     },
     "conflict": {
