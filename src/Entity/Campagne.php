@@ -41,9 +41,9 @@ abstract class Campagne
     #[ORM\Column(nullable: true)]
     private ?\DateTime $updateAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'campagnes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Groupement $groupement = null;
+    // #[ORM\ManyToOne(inversedBy: 'campagnes')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Groupement $groupement = null;
 
     /**
      * @var Collection<int, Cotisation>
@@ -145,17 +145,17 @@ abstract class Campagne
         return $this;
     }
 
-    public function getGroupement(): ?Groupement
-    {
-        return $this->groupement;
-    }
+    // public function getGroupement(): ?Groupement
+    // {
+    //     return $this->groupement;
+    // }
 
-    public function setGroupement(?Groupement $groupement): static
-    {
-        $this->groupement = $groupement;
+    // public function setGroupement(?Groupement $groupement): static
+    // {
+    //     $this->groupement = $groupement;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * @return Collection<int, Cotisation>

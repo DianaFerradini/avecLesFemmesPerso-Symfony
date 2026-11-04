@@ -16,8 +16,8 @@ class Caisse
     #[ORM\Column]
     private ?int $solde = null;
 
-    #[ORM\OneToOne(mappedBy: 'caisse', cascade: ['persist', 'remove'])]
-    private ?Groupement $groupement = null;
+    // #[ORM\OneToOne(mappedBy: 'caisse', cascade: ['persist', 'remove'])]
+    // private ?Groupement $groupement = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createAt = null;
@@ -42,22 +42,22 @@ class Caisse
         return $this;
     }
 
-    public function getGroupement(): ?Groupement
-    {
-        return $this->groupement;
-    }
+    // public function getGroupement(): ?Groupement
+    // {
+    //     return $this->groupement;
+    // }
 
-    public function setGroupement(Groupement $groupement): static
-    {
-        // set the owning side of the relation if necessary
-        if ($groupement->getCaisse() !== $this) {
-            $groupement->setCaisse($this);
-        }
+    // public function setGroupement(Groupement $groupement): static
+    // {
+    //     // set the owning side of the relation if necessary
+    //     if ($groupement->getCaisse() !== $this) {
+    //         $groupement->setCaisse($this);
+    //     }
 
-        $this->groupement = $groupement;
+    //     $this->groupement = $groupement;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCreateAt(): ?\DateTimeImmutable
     {

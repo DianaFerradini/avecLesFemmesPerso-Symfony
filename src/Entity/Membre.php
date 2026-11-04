@@ -52,9 +52,9 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(enumType: RoleMembre::class)]
     private ?RoleMembre $role = null;
 
-    #[ORM\ManyToOne(inversedBy: 'membres')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Groupement $groupement = null;
+    // #[ORM\ManyToOne(inversedBy: 'membres')]
+    // #[ORM\JoinColumn(nullable: false)]
+    // private ?Groupement $groupement = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createAt = null;
@@ -236,17 +236,17 @@ class Membre implements UserInterface, PasswordAuthenticatedUserInterface
         return $this instanceof Admin;
     }
 
-    public function getGroupement(): ?Groupement
-    {
-        return $this->groupement;
-    }
+    // public function getGroupement(): ?Groupement
+    // {
+    //     return $this->groupement;
+    // }
 
-    public function setGroupement(?Groupement $groupement): static
-    {
-        $this->groupement = $groupement;
+    // public function setGroupement(?Groupement $groupement): static
+    // {
+    //     $this->groupement = $groupement;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getCreateAt(): ?\DateTimeImmutable
     {
