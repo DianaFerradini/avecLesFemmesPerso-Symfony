@@ -84,6 +84,21 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "ferradinidiana:cache:clear": [
+            "@php bin/console cache:clear"
+        ],
+        "ferradinidiana:db:create": [
+            "@php bin/console doctrine:database:drop --if-exists --force",
+            "@php bin/console doctrine:database:create"
+        ],
+        "ferradinidiana:make:entity": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php bin/console make:entity"
+        ],
+        "ferradinidiana:migration": [
+            "@php bin/console make:migration",
+            "@php bin/console doctrine:migrations:migrate --no-interaction"
         ]
     },
     "conflict": {
