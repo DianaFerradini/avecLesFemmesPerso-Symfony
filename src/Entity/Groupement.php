@@ -27,6 +27,12 @@ class Groupement
     #[ORM\Column(length: 17)]
     private ?string $tel = null;
 
+    /**
+     * @var Collection<int, Exercice>
+     */
+    #[ORM\OneToMany(targetEntity: Exercice::class, mappedBy: 'groupement', orphanRemoval: true)]
+    private Collection $exercices;
+
     // #[ORM\OneToOne(inversedBy: 'groupement', cascade: ['persist', 'remove'])]
     // #[ORM\JoinColumn(nullable: false)]
     // private ?Caisse $caisse = null;
@@ -49,6 +55,7 @@ class Groupement
         // $this->membres = new ArrayCollection();
         // $this->campagnes = new ArrayCollection();
         $this->initDate();
+        $this->exercices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,4 +171,34 @@ class Groupement
 
     //     return $this;
     // }
+
+    /**
+     * @return Collection<int, Exercice>
+     */
+    public function getExercices(): Collection
+    {
+        return $this->exercices;
+    }
+
+    public function addExercice(Exercice $exercice): static
+    {
+        if (!$this->exercices->contains($exercice)) {
+            $this->exercices->add($exercice);
+            $exercice->setGroupement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExercice(Exercice $exercice): static
+    {
+        if ($this->exercices->removeElement($exercice)) {
+            // set the owning side to null (unless already changed)
+            if ($exercice->getGroupement() === $this) {
+                $exercice->setGroupement(null);
+            }
+        }
+
+        return $this;
+    }
 }
