@@ -18,8 +18,7 @@ class Exercice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $debutAt = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]    private ?\DateTime $debutAt = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTime $finAt = null;
